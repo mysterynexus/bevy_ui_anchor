@@ -169,7 +169,7 @@ impl<SingleCameraMarker: Component> Plugin for AnchorUiPlugin<SingleCameraMarker
         );
 
         app.add_systems(
-            PostUpdate,
+            Update,
             system_move_ui_nodes::<SingleCameraMarker>.in_set(AnchorUiSystemSet::MoveUiNodes),
         );
         app.add_systems(
