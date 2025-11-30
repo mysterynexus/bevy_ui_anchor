@@ -2,7 +2,6 @@ use std::marker::PhantomData;
 
 use bevy::{
     camera::visibility::VisibilitySystems, ecs::query::QuerySingleError, prelude::*, ui::UiSystems,
-    window::PrimaryWindow,
 };
 
 pub mod prelude {
@@ -238,7 +237,7 @@ fn system_update_visibility_of_uinode(
 
 fn system_move_ui_nodes<C: Component>(
     cameras: Query<(Entity, &Camera), With<C>>,
-    window: Query<&Window, With<PrimaryWindow>>,
+    // window: Query<&Window, With<PrimaryWindow>>,
     mut uinodes: Query<(
         Entity,
         &mut Node,
@@ -249,14 +248,14 @@ fn system_move_ui_nodes<C: Component>(
     )>,
     transformhelper: TransformHelper,
 ) {
-    let window = match window.single() {
-        Ok(window) => window,
-        Err(QuerySingleError::NoEntities(_)) => return,
-        Err(err @ QuerySingleError::MultipleEntities(_)) => {
-            bevy::log::error!("more than one primary window: {err}");
-            return;
-        }
-    };
+    // let window = match window.single() {
+    //     Ok(window) => window,
+    //     Err(QuerySingleError::NoEntities(_)) => return,
+    //     Err(err @ QuerySingleError::MultipleEntities(_)) => {
+    //         bevy::log::error!("more than one primary window: {err}");
+    //         return;
+    //     }
+    // };
     let (camera_entity, main_camera) = match cameras.single() {
         Ok(camera) => camera,
         Err(QuerySingleError::NoEntities(_)) => return,
@@ -321,7 +320,7 @@ fn system_move_ui_nodes<C: Component>(
         node.left = leftpos;
         // }
 
-        let window_height = window.height();
+        // let window_height = window.height();
 
         let nodeheight = if let Val::Px(height) = node.height {
             height
@@ -330,13 +329,13 @@ fn system_move_ui_nodes<C: Component>(
         };
 
         let newheight = match uianchorconf.anchorpoint.vertical {
-            VerticalAnchor::Top => Val::Px(window_height - position.y - nodeheight),
-            VerticalAnchor::Mid => Val::Px(window_height - position.y - nodeheight / 2.0),
-            VerticalAnchor::Bottom => Val::Px(window_height - position.y),
+            VerticalAnchor::Top => Val::Px(position.y),
+            VerticalAnchor::Mid => Val::Px(position.y - nodeheight / 2.0),
+            VerticalAnchor::Bottom => Val::Px(position.y - nodeheight),
         };
 
         // if check_if_not_close(node.as_ref().bottom, newheight) {
-        node.bottom = newheight;
+        node.top = newheight;
         // }
     }
 }
