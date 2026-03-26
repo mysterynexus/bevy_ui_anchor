@@ -10,7 +10,7 @@ keywords = ["bevy", "ui"]
 readme = "README.md"
 
 [dependencies.bevy]
-version = "0.18.0"
+version = "0.18"
 default-features = false
 features = ["bevy_ui", "bevy_window", "bevy_log"]
 
